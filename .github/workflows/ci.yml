@@ -19,7 +19,7 @@ jobs:
             cpack_gen: DEB
           - os: windows-latest
             name: Windows
-            cpack_gen: NSIS
+            cpack_gen: ZIP
           - os: macos-latest
             name: macOS
             cpack_gen: DragNDrop
@@ -58,11 +58,6 @@ jobs:
         shell: pwsh
         run: vcpkg install curl:x64-windows
 
-      - name: Install NSIS (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: choco install nsis -y --no-progress
-
       # ---------- Build ----------
       - name: Configure
         shell: bash
@@ -93,6 +88,7 @@ jobs:
             build/GotiKinesis-*.deb
             build/GotiKinesis-*.exe
             build/GotiKinesis-*.dmg
+            build/GotiKinesis-*.zip
           if-no-files-found: warn
 
   # ---------- Failure notification ----------
@@ -105,7 +101,7 @@ jobs:
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
-          server_port: 587
+          server_port: 465
           secure: true
           username: ${{ secrets.SMTP_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}

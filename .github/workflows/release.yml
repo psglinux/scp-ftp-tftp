@@ -84,7 +84,12 @@ jobs:
       # ---------- Package ----------
       - name: Package
         working-directory: build
-        run: cpack -G ${{ matrix.cpack_gen }} -C Release
+        shell: bash
+        run: |
+          if ! cpack -G ${{ matrix.cpack_gen }} -C Release; then
+            echo "Primary packaging (${{ matrix.cpack_gen }}) failed, falling back to ZIP"
+            cpack -G ZIP -C Release
+          fi
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -94,6 +99,7 @@ jobs:
             build/GotiKinesis-*.deb
             build/GotiKinesis-*.exe
             build/GotiKinesis-*.dmg
+            build/GotiKinesis-*.zip
 
   # ---------- Create GitHub Release ----------
   publish:
@@ -119,6 +125,7 @@ jobs:
             artifacts/**/*.deb
             artifacts/**/*.exe
             artifacts/**/*.dmg
+            artifacts/**/*.zip
 
   # ---------- Failure notification ----------
   notify:
@@ -130,7 +137,7 @@ jobs:
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
-          server_port: 587
+          server_port: 465
           secure: true
           username: ${{ secrets.SMTP_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
