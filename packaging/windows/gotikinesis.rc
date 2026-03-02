@@ -1,0 +1,32 @@
+#include <windows.h>
+
+IDI_ICON1 ICON "packaging/windows/app.ico"
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION    1,0,0,0
+PRODUCTVERSION 1,0,0,0
+FILEFLAGSMASK  VS_FFI_FILEFLAGSMASK
+FILEFLAGS      0
+FILEOS         VOS_NT_WINDOWS32
+FILETYPE       VFT_APP
+FILESUBTYPE    VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "CompanyName",      "GotiKinesis"
+            VALUE "FileDescription",  "SCP / FTP / TFTP File Transfer Utility"
+            VALUE "FileVersion",      "1.0.0.0"
+            VALUE "InternalName",     "gotikinesis"
+            VALUE "LegalCopyright",   "Copyright (c) 2026 GotiKinesis Contributors"
+            VALUE "OriginalFilename", "gotikinesis.exe"
+            VALUE "ProductName",      "GotiKinesis"
+            VALUE "ProductVersion",   "1.0.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 1252
+    END
+END

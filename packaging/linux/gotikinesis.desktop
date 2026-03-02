@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=GotiKinesis
+GenericName=File Transfer Utility
+Comment=Transfer files via SCP, FTP, and TFTP
+Exec=gotikinesis
+Icon=gotikinesis
+Terminal=false
+Type=Application
+Categories=Network;FileTransfer;
+Keywords=scp;ftp;tftp;transfer;upload;download;ssh;
+StartupNotify=true

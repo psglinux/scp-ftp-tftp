@@ -1,0 +1,28 @@
+# Build output
+build/
+build-*/
+
+# Release packages — only latest/ and <tag>/ dirs exist at runtime;
+# none of their binary contents belong in git.
+release/latest/
+release/*/
+!release/.gitkeep
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Compiled objects
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
