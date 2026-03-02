@@ -25,7 +25,10 @@ endif()
 
 add_executable(gotikinesis ${APP_SOURCES})
 
-target_include_directories(gotikinesis PRIVATE ${CURL_INCLUDE_DIRS})
+target_include_directories(gotikinesis PRIVATE
+    ${CURL_INCLUDE_DIRS}
+    $<$<PLATFORM_ID:Windows>:${CMAKE_SOURCE_DIR}/packaging/windows>
+)
 
 target_link_libraries(gotikinesis PRIVATE
     Qt${QT_VERSION_MAJOR}::Core
