@@ -50,8 +50,8 @@ jobs:
         if: runner.os == 'Windows'
         uses: jurplel/install-qt-action@v4
         with:
-          version: '6.7.*'
-          arch: win64_msvc2022_64
+          version: '6.5.3'
+          arch: win64_msvc2019_64
 
       - name: Install libcurl via vcpkg (Windows)
         if: runner.os == 'Windows'
