@@ -41,7 +41,7 @@ echo ====================================
 if not exist "%PROJECT_DIR%\build" mkdir "%PROJECT_DIR%\build"
 cd /d "%PROJECT_DIR%\build"
 
-cmake "%PROJECT_DIR%" -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF
+cmake "%PROJECT_DIR%" -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF -DVCPKG_TARGET_TRIPLET=x64-windows-static-md
 if errorlevel 1 (
     echo CMake configuration failed.
     pause

@@ -56,7 +56,7 @@ jobs:
       - name: Install libcurl via vcpkg (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
-        run: vcpkg install curl:x64-windows
+        run: vcpkg install curl:x64-windows-static-md
 
       # ---------- Build ----------
       - name: Configure
@@ -64,7 +64,7 @@ jobs:
         run: |
           EXTRA=""
           if [ "$RUNNER_OS" = "Windows" ]; then
-            EXTRA="-DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
+            EXTRA="-DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows-static-md"
           fi
           cmake -B build -DCMAKE_BUILD_TYPE=Release $EXTRA
 
