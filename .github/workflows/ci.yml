@@ -36,7 +36,15 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq qt6-base-dev libcurl4-openssl-dev \
-            libgl1-mesa-dev libglu1-mesa-dev
+            libgl1-mesa-dev libglu1-mesa-dev docker-compose-v2
+
+      - name: Start Docker test servers (Linux)
+        if: runner.os == 'Linux'
+        working-directory: tests
+        run: |
+          docker compose up -d
+          sleep 15
+          docker ps
 
       # ---------- macOS ----------
       - name: Install dependencies (macOS)
@@ -106,7 +114,7 @@ jobs:
           username: ${{ secrets.SMTP_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
           subject: "[GotiKinesis CI] Build FAILED on ${{ github.ref_name }}"
-          to: psglinux@gmail.com
+          to: ${{ secrets.SMTP_USERNAME }}
           from: GotiKinesis CI <${{ secrets.SMTP_USERNAME }}>
           body: |
             CI build failed for GotiKinesis.

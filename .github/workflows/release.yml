@@ -38,7 +38,15 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq qt6-base-dev libcurl4-openssl-dev \
-            libgl1-mesa-dev libglu1-mesa-dev
+            libgl1-mesa-dev libglu1-mesa-dev docker-compose-v2
+
+      - name: Start Docker test servers (Linux)
+        if: runner.os == 'Linux'
+        working-directory: tests
+        run: |
+          docker compose up -d
+          sleep 15
+          docker ps
 
       # ---------- macOS ----------
       - name: Install dependencies (macOS)
@@ -127,8 +135,35 @@ jobs:
             artifacts/**/*.dmg
             artifacts/**/*.zip
 
+  # ---------- Success notification with download URL ----------
+  notify-success:
+    needs: [build, publish]
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send release email with download URL
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "[GotiKinesis] Release ${{ github.ref_name }} is ready"
+          to: ${{ secrets.SMTP_USERNAME }}
+          from: GotiKinesis CI <${{ secrets.SMTP_USERNAME }}>
+          body: |
+            GotiKinesis ${{ github.ref_name }} has been built and published.
+
+            Download: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ github.ref_name }}
+
+            Commit:  ${{ github.sha }}
+            Author:  ${{ github.actor }}
+
+            CI run:  ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
   # ---------- Failure notification ----------
-  notify:
+  notify-failure:
     needs: [build, publish]
     if: failure()
     runs-on: ubuntu-latest
@@ -142,7 +177,7 @@ jobs:
           username: ${{ secrets.SMTP_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
           subject: "[GotiKinesis Release] FAILED for ${{ github.ref_name }}"
-          to: psglinux@gmail.com
+          to: ${{ secrets.SMTP_USERNAME }}
           from: GotiKinesis CI <${{ secrets.SMTP_USERNAME }}>
           body: |
             Release build failed for GotiKinesis ${{ github.ref_name }}.

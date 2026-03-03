@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(GotiKinesis VERSION 0.1.0 LANGUAGES CXX)
+project(GotiKinesis VERSION 0.1.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -229,6 +229,49 @@ if(BUILD_TESTS)
 
     add_test(NAME MainWindow COMMAND test_mainwindow)
 
+
+
+    # -- SCP integration (Docker) --
+    add_executable(test_scp_integration  tests/test_scp_integration.cpp)
+    target_include_directories(test_scp_integration PRIVATE
+        ${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/tests)
+    target_compile_definitions(test_scp_integration PRIVATE
+        TESTS_SOURCE_DIR="${CMAKE_SOURCE_DIR}/tests")
+    target_link_libraries(test_scp_integration PRIVATE
+        app_core  Qt${QT_VERSION_MAJOR}::Test)
+    add_test(NAME ScpIntegration COMMAND test_scp_integration)
+
+    # -- FTP integration (Docker) --
+    add_executable(test_ftp_integration  tests/test_ftp_integration.cpp)
+    target_include_directories(test_ftp_integration PRIVATE
+        ${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/tests)
+    target_compile_definitions(test_ftp_integration PRIVATE
+        TESTS_SOURCE_DIR="${CMAKE_SOURCE_DIR}/tests")
+    target_link_libraries(test_ftp_integration PRIVATE
+        app_core  Qt${QT_VERSION_MAJOR}::Test)
+    add_test(NAME FtpIntegration COMMAND test_ftp_integration)
+
+    # -- TFTP real server integration (Docker) --
+    add_executable(test_tftp_real_integration  tests/test_tftp_real_integration.cpp)
+    target_include_directories(test_tftp_real_integration PRIVATE
+        ${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/tests)
+    target_compile_definitions(test_tftp_real_integration PRIVATE
+        TESTS_SOURCE_DIR="${CMAKE_SOURCE_DIR}/tests")
+    target_link_libraries(test_tftp_real_integration PRIVATE
+        app_core  Qt${QT_VERSION_MAJOR}::Test)
+    add_test(NAME TftpRealIntegration COMMAND test_tftp_real_integration)
+
+    # -- Performance benchmarks (Docker) --
+    add_executable(test_performance  tests/test_performance.cpp)
+    target_include_directories(test_performance PRIVATE
+        ${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/tests)
+    target_compile_definitions(test_performance PRIVATE
+        TESTS_SOURCE_DIR="${CMAKE_SOURCE_DIR}/tests")
+    target_link_libraries(test_performance PRIVATE
+        app_core  Qt${QT_VERSION_MAJOR}::Test)
+    add_test(NAME Performance COMMAND test_performance)
+
     set_tests_properties(TftpPackets TransferEngine TftpIntegration MainWindow
+        ScpIntegration FtpIntegration TftpRealIntegration Performance
         PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
 endif()

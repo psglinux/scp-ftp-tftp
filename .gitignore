@@ -19,6 +19,9 @@ release/*/
 .DS_Store
 Thumbs.db
 
+# SSH test keys (private key must not be committed)
+tests/docker/ssh_test_key
+
 # Compiled objects
 *.o
 *.obj

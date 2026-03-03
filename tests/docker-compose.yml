@@ -1,0 +1,59 @@
+services:
+  scp-server:
+    image: linuxserver/openssh-server:latest
+    container_name: gotikinesis-scp
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - USER_NAME=testuser
+      - USER_PASSWORD=testpass
+      - PASSWORD_ACCESS=true
+      - SUDO_ACCESS=false
+      - PUBLIC_KEY_FILE=/tmp/ssh_test_key.pub
+    volumes:
+      - ./docker/ssh_test_key.pub:/tmp/ssh_test_key.pub:ro
+    ports:
+      - "2222:2222"
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 2222"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+    restart: "no"
+
+  ftp-server:
+    image: fauria/vsftpd:latest
+    container_name: gotikinesis-ftp
+    environment:
+      - FTP_USER=testuser
+      - FTP_PASS=testpass
+      - PASV_ENABLE=YES
+      - PASV_MIN_PORT=21100
+      - PASV_MAX_PORT=21110
+      - PASV_ADDRESS=127.0.0.1
+      - LOCAL_UMASK=022
+    volumes:
+      - ftp-data:/home/vsftpd/testuser
+    ports:
+      - "2121:21"
+      - "21100-21110:21100-21110"
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 21 || exit 1"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+    restart: "no"
+
+  tftp-server:
+    image: pghalliday/tftp:latest
+    container_name: gotikinesis-tftp
+    entrypoint: ["/bin/sh", "-c", "chmod 777 /var/tftpboot && exec in.tftpd -L --secure --create /var/tftpboot"]
+    ports:
+      - "6969:69/udp"
+    volumes:
+      - tftp-data:/var/tftpboot
+    restart: "no"
+
+volumes:
+  ftp-data:
+  tftp-data:
