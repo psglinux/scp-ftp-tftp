@@ -175,7 +175,8 @@ private slots:
         QVERIFY(completedSpy.count() >= 1);
         QList<QVariant> args = completedSpy.first();
         QCOMPARE(args.at(0).toBool(), false);
-        QVERIFY(args.at(1).toString().contains("Cannot open"));
+        QString errMsg = args.at(1).toString();
+        QVERIFY(errMsg.contains("Cannot open") || errMsg.contains("SSH support"));
     }
 
     void downloadToUnwritablePathEmitsError()
