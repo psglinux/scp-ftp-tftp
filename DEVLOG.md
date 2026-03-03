@@ -32,7 +32,8 @@ All references to `<author-email>` in this document refer to the address above.
 9. [CI/CD Pipeline](#9-cicd-pipeline)
 10. [Releasing](#10-releasing)
 11. [Development Log](#11-development-log)
-12. [Future Roadmap](#12-future-roadmap)
+12. [Time Tracking](#12-time-tracking)
+13. [Future Roadmap](#13-future-roadmap)
 
 ---
 
@@ -654,7 +655,32 @@ git push --tags
 
 ---
 
-## 12. Future Roadmap
+## 12. Time Tracking
+
+This section records the time spent by the spec author (user) and the
+AI agent on each session. "User time" is the time spent specifying
+requirements, reviewing plans, and providing feedback. "Agent time" is
+the wall-clock time the agent spends executing tasks (coding, building,
+testing, waiting for CI).
+
+| Session | Date | Task | User Time | Agent Time | Notes |
+|---------|------|------|-----------|------------|-------|
+| 1 | 2026-03-02 | Initial app, CI/CD, packaging, v0.1.0 | ~45 min | ~3 hr | Setup repos, CI matrix, fix Windows libcurl, Qt CI issues, packaging, release |
+| 2 | 2026-03-02 | Plan v0.1.1, create DEVLOG.md | ~30 min | ~1 hr | Drew up test/logging plan, wrote DEVLOG.md, replication gaps |
+| 3 | 2026-03-03 | Execute v0.1.1: logging, Docker tests, benchmarks, release | ~1 min | ~1 hr 40 min | User approved plan ("yes lets go"), agent executed all 8 steps, fixed CI test failures, re-tagged release |
+
+**Cumulative totals:**
+
+| | User | Agent |
+|---|---|---|
+| Total | ~1 hr 16 min | ~5 hr 40 min |
+
+*User time is estimated from message frequency and complexity.
+Agent time includes CI wait periods (~30 min this session).*
+
+---
+
+## 13. Future Roadmap
 
 Features to implement after core stability is proven:
 
