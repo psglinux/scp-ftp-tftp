@@ -95,6 +95,51 @@ private slots:
         QCOMPARE(url, QString("ftp://srv:21/already/absolute"));
     }
 
+    void urlAppendsFilenameWhenRemoteIsDir()
+    {
+        TransferEngine engine;
+        TransferEngine::TransferConfig cfg;
+        cfg.protocol   = TransferEngine::SCP;
+        cfg.direction  = TransferEngine::Upload;
+        cfg.host       = "srv";
+        cfg.port       = 22;
+        cfg.localPath  = "/home/user/docs/report.pdf";
+        cfg.remotePath = "/tmp/";
+
+        QString url = engine.buildCurlUrl(cfg);
+        QCOMPARE(url, QString("scp://srv:22/tmp/report.pdf"));
+    }
+
+    void urlKeepsExplicitFilename()
+    {
+        TransferEngine engine;
+        TransferEngine::TransferConfig cfg;
+        cfg.protocol   = TransferEngine::SCP;
+        cfg.direction  = TransferEngine::Upload;
+        cfg.host       = "srv";
+        cfg.port       = 22;
+        cfg.localPath  = "/home/user/report.pdf";
+        cfg.remotePath = "/tmp/renamed.pdf";
+
+        QString url = engine.buildCurlUrl(cfg);
+        QCOMPARE(url, QString("scp://srv:22/tmp/renamed.pdf"));
+    }
+
+    void urlDownloadKeepsDirPath()
+    {
+        TransferEngine engine;
+        TransferEngine::TransferConfig cfg;
+        cfg.protocol   = TransferEngine::SCP;
+        cfg.direction  = TransferEngine::Download;
+        cfg.host       = "srv";
+        cfg.port       = 22;
+        cfg.localPath  = "/home/user/local.bin";
+        cfg.remotePath = "/remote/dir/file.bin";
+
+        QString url = engine.buildCurlUrl(cfg);
+        QCOMPARE(url, QString("scp://srv:22/remote/dir/file.bin"));
+    }
+
     void urlCustomPort()
     {
         TransferEngine engine;

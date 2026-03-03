@@ -144,6 +144,12 @@ QString TransferEngine::buildCurlUrl(const TransferConfig &config) const
     if (!path.startsWith('/'))
         path.prepend('/');
 
+    if (config.direction == Upload && (path.endsWith('/') || path == "/")) {
+        QString localName = QFileInfo(config.localPath).fileName();
+        if (!localName.isEmpty())
+            path += localName;
+    }
+
     return QStringLiteral("%1://%2:%3%4")
                .arg(scheme)
                .arg(config.host)
@@ -226,9 +232,17 @@ void TransferEngine::transferWithCurl(const TransferConfig &config)
 
     if (config.protocol == SCP) {
         if (!config.keyFile.isEmpty()) {
-            curl_easy_setopt(curl, CURLOPT_SSH_PRIVATE_KEYFILE,
-                             config.keyFile.toUtf8().constData());
-            emit logMessage("Auth: SSH key file = " + config.keyFile);
+            QFileInfo keyInfo(config.keyFile);
+            if (keyInfo.isDir()) {
+                emit logMessage("[warn] SSH key path is a directory, not a file: "
+                                + config.keyFile);
+                emit logMessage("[warn] Please specify a private key file, e.g. "
+                                + config.keyFile + "/id_rsa or id_ed25519");
+            } else {
+                curl_easy_setopt(curl, CURLOPT_SSH_PRIVATE_KEYFILE,
+                                 config.keyFile.toUtf8().constData());
+                emit logMessage("Auth: SSH key file = " + config.keyFile);
+            }
         }
         curl_easy_setopt(curl, CURLOPT_SSH_AUTH_TYPES,
                          CURLSSH_AUTH_PASSWORD | CURLSSH_AUTH_PUBLICKEY);
